@@ -1,0 +1,22 @@
+[build]
+#dir = "/home/ale/uni/tesi/0codice_tesi/tesi"
+##result_dir = ""
+#result_file = "/home/ale/uni/tesi/0codice_tesi/tesi/results"
+##tags = ["cobalt", "dridex", "emotet", "trickbot"]
+tags = ["dridex"]
+#file = "/home/ale/uni/tesi/0codice_tesi/tesi"
+#file = "/home/ale/uni/tesi/pcap/MTA/2020/TLS/2020-04-27-Dridex-infection-traffic.pcap"
+cobalt = "/home/ale/uni/tesi/pcap/cobalt/"
+##dridex = "/home/ale/uni/tesi/pcap/dridex/"
+dridex = "/home/ale/uni/tesi/pcap/dridex/test/"
+emotet = "/home/ale/uni/tesi/pcap/emotet/"
+trickbot = "/home/ale/uni/tesi/pcap/trickbot/"
+out_dir = "./out/"
+result_dir = "./results/"
+
+[apply]
+#tags = ["cobalt", "dridex", "emotet", "trickbot"]
+tags = ["dridex"]
+#dir = "/home/ale/uni/tesi/pcap/"
+dir = "/home/ale/uni/tesi/pcap/dridex/test/"
+#file = "/home/ale/uni/tesi/0codice_tesi/tesi/"
