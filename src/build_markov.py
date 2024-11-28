@@ -76,6 +76,6 @@ def markov(file_in):
     return ALL
 
 #M = markov(file_in)
-#print(M[0]) enter
-#print(M[1]) transition
-#print(M[2]) exit
+#M[0])enter
+#M[1] transition
+#M[2] exit

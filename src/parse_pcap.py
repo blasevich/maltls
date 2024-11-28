@@ -38,7 +38,6 @@ def parse_file(filename_in, filename_out, filter):
     params = ["-o", "tcp.desegment_tcp_streams:TRUE",
         "-o", "tls.desegment_ssl_records:TRUE",
         "-o", "tls.desegment_ssl_application_data:TRUE"]
-    #filter = 'tls.handshake.type eq 1 and not (tls.handshake.extensions_server_name matches ".*.microsoft.com|.*.msedge.net|.*.xboxlive.com|.*.bing.com|.*.live.com|.*.windows.com")'
 
     tls_streams = search_tls(filename_in, params, filter)
     parse_stream(filename_in, filename_out, tls_streams, params)

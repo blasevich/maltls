@@ -9,35 +9,30 @@ def main():
     with open(config_file, "rb") as f:
         data = tomllib.load(f)
 
-    #out_dir = data['build']['']
-
-    #get pcaps > from config file ?? *OK*
-    #parse pcaps > parse_pcap ? *OK*
+    #get pcaps from config file *OK*
+    #parse pcaps *OK*
     filter = 'tls.handshake.type eq 1 and not (tls.handshake.extensions_server_name matches ".*.microsoft.com|.*.msedge.net|.*.xboxlive.com|.*.bing.com|.*.live.com|.*.windows.com")' ### check !!!
 
     for tag in data['build']['tags']:
         print(tag)
         dir = data['build'][tag]
-        #print(dir)
         only_pcap = dir + "*.pcap" #dir + "/" + "*.pcap"
         pcaps = glob.glob(only_pcap)
 
-        #handle tag here: create, write to out file...
-
-        out_file = "out_" + tag
+        out_file = data['build']['out_dir'] + "out_" + tag #parsed pcap
         with open(out_file, 'w') as out:
             out.write("TAG: {}\n".format(tag))
 
         for f in pcaps:
             parse_pcap.parse_file(f, out_file, filter)
 
-    #build transition matrix > build_markov *ok*
+    #build transition matrix *ok*
     #save transition matrix to file *ok*
     for tag in data['build']['tags']:
-        out_file = "out_" + tag
+        out_file = data['build']['out_dir'] + "out_" + tag #transition matrix
         result = build_markov.markov(out_file)
 
-        result_file = "result_" + tag
+        result_file = data['build']['result_dir'] + "result_" + tag
         #print(result)
         with open(result_file, 'w') as out:
             json.dump(result, out)
