@@ -15,4 +15,4 @@ tags = ["dridex"]
 #dir = "/home/ale/uni/tesi/pcap/"
 dir = "/home/ale/uni/tesi/pcap/dridex/test/"
 out_dir = "../out/parsed_pcap/"
-results_out = "../out/apply_results/"
+results_dir = "../out/apply_results/"
