@@ -14,6 +14,8 @@ def main():
     only_pcap = dir + "*.pcap" #dir + "/" + "*.pcap"
     pcaps = glob.glob(only_pcap)
 
+    result_dir = data['apply']['results_out']
+
     #parse pcap
     filter = "tls.handshake.type eq 1"
     for f in pcaps:
@@ -25,20 +27,26 @@ def main():
             out.write("TAG: {}\n".format(name))
         parse_pcap.parse_file(f, file_out, filter)
 
-        for tag in data['apply']["tags"]:
-            #retrieve transition matrix
-            markov = data['build']['result_dir'] + "result_" + tag
-            with open(markov, 'r') as f:
-                M = json.load(f)
-            
-            with open(file_out, 'r') as fo:
-                for s in fo.readlines():
-                    if not s.startswith('stream') and not s.startswith('TAG') and not s.startswith('\n'):
-                        x = s.split()
-                        p = get_probability.prob(M[0], M[1], M[2], x)
-                        print("{}: {}".format(x, p))
-                    elif not s.startswith('\n'):
-                        print("\n{}".format(s), end=" ")
+        result_file = result_dir + "result_" + name
+        with open(result_file, 'w') as result:
+            result.write("{}\n".format(name))
+            for tag in data['apply']["tags"]:
+                result.write("{}\n".format(tag))
+                #retrieve transition matrix
+                markov = data['build']['result_dir'] + "result_" + tag
+                with open(markov, 'r') as f:
+                    M = json.load(f)
+                
+                with open(file_out, 'r') as fo:
+                    for s in fo.readlines():
+                        if not s.startswith('stream') and not s.startswith('TAG') and not s.startswith('\n'):
+                            x = s.split()
+                            p = get_probability.prob(M[0], M[1], M[2], x)
+                            print("{}: {}".format(x, p))
+                            result.write("{} {}\n".format(x, p)) #write tls sequence + probability
+                        elif s.startswith('stream'):
+                            print("{}".format(s), end=" ")
+                            result.write("{}".format(s))
 
 if __name__ == '__main__':
     main()
