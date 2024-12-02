@@ -7,7 +7,7 @@ dridex = "/home/ale/uni/tesi/pcap/dridex/test/"
 emotet = "/home/ale/uni/tesi/pcap/emotet/"
 trickbot = "/home/ale/uni/tesi/pcap/trickbot/"
 out_dir = "../out/parsed_malpcap/"
-result_dir = "../out/results/"
+result_dir = "../out/build_results/"
 
 [apply]
 #tags = ["cobalt", "dridex", "emotet", "trickbot"]
@@ -15,3 +15,4 @@ tags = ["dridex"]
 #dir = "/home/ale/uni/tesi/pcap/"
 dir = "/home/ale/uni/tesi/pcap/dridex/test/"
 out_dir = "../out/parsed_pcap/"
+results_out = "../out/apply_results/"
