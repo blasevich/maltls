@@ -14,7 +14,7 @@ def main():
     only_pcap = dir + "*.pcap" #dir + "/" + "*.pcap"
     pcaps = glob.glob(only_pcap)
 
-    result_dir = data['apply']['results_out']
+    result_dir = data['apply']['results_dir']
 
     #parse pcap
     filter = "tls.handshake.type eq 1"
