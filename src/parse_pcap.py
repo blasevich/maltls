@@ -31,7 +31,8 @@ def parse_stream(filename_in, filename_out, tls_streams, params):
                             else:
                                 out.write("{} ".format(tls_type))
                         except AttributeError:
-                            print("attribute error: {}".format(packet.number))
+                            #print("attribute error: {}".format(packet.number))
+                            pass
         out.write("\n")
 
 def parse_file(filename_in, filename_out, filter):
