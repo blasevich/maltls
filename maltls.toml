@@ -1,18 +1,24 @@
 [build]
 ##tags = ["cobalt", "dridex", "emotet", "trickbot"]
-tags = ["dridex"]
-cobalt = "/home/ale/uni/tesi/pcap/cobalt/"
-##dridex = "/home/ale/uni/tesi/pcap/dridex/"
-dridex = "/home/ale/uni/tesi/pcap/dridex/test/"
-emotet = "/home/ale/uni/tesi/pcap/emotet/"
-trickbot = "/home/ale/uni/tesi/pcap/trickbot/"
+tags = ["dridex", "trickbot"]
+cobalt = "../pcap/cobalt/build/"
+dridex = "../pcap/dridex/build/"
+emotet = "../pcap/emotet/build/"
+trickbot = "../pcap/trickbot/build/"
 out_dir = "../out/parsed_malpcap/"
 result_dir = "../out/build_results/"
 
 [apply]
 #tags = ["cobalt", "dridex", "emotet", "trickbot"]
-tags = ["dridex"]
-#dir = "/home/ale/uni/tesi/pcap/"
-dir = "/home/ale/uni/tesi/pcap/dridex/test/"
+tags = ["dridex", "trickbot"]
+#dir = "../pcap/dridex/validate/"
+dir = "../pcap/trickbot/validate/"
 out_dir = "../out/parsed_pcap/"
 results_dir = "../out/apply_results/"
+
+########################################
+#cobalt = "../pcap/cobalt/validate/"
+#dridex = "../pcap/dridex/validate/"
+#emotet = "../pcap/emotet/validate/"
+#trickbot = "../pcap/trickbot/validate/"
+########################################
