@@ -11,7 +11,6 @@ def main():
 
     #get pcaps from config file *OK*
     #parse pcaps *OK*
-    #filter = 'tls.handshake.type eq 1 and not (tls.handshake.extensions_server_name matches ".*.microsoft.com|.*.msedge.net|.*.xboxlive.com|.*.bing.com|.*.live.com|.*.windows.com")'
     filter = 'tls.handshake.type eq 1'
 
     for tag in data['build']['tags']:

@@ -23,7 +23,7 @@ def markov(file_in):
     M = []
     states = [] #will contain all the TLS message types seen in the flows
 
-###################################################################
+    ###################################################################
     with open(file_in) as f:
         row = 0
         for line in f.readlines():
@@ -39,7 +39,7 @@ def markov(file_in):
                 M.append(r)
                 #print(r)
                 row = row+1
-###################################################################
+    ###################################################################
 
     ALL = []
 
@@ -57,6 +57,7 @@ def markov(file_in):
     T = count_instances(exit)
     #ALL.append(T)
 
+    #compute transition matrix
     P = {}
     for s in states:
         #print("STATE '{}': ".format(s), end=" ")
@@ -75,7 +76,6 @@ def markov(file_in):
 
     return ALL
 
-#M = markov(file_in)
-#M[0])enter
-#M[1] transition
-#M[2] exit
+#ALL[0] enter
+#ALL[1] transition
+#ALL[2] exit
