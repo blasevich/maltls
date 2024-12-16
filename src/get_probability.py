@@ -6,7 +6,7 @@ def enter_exit_probability(dict, state):
         return dict[state]
     except:
         print("{}: no corresponding state".format(state))
-        return(0)
+        return 0
     
 def transition_probability(P, X):
     l = len(X)
