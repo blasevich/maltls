@@ -35,9 +35,7 @@ def main():
     config_file = "../maltls.toml"
     with open(config_file, "rb") as f:
         data = tomllib.load(f)
-    #tags = data['apply']["tags"]
-    #tags = ["cobalt", "dridex", "emotet", "trickbot"]
-    tags = ["dridex", "trickbot"]
+    tags = data['apply']["tags"]
 
     for tag in tags:
         D[tag] = {}
