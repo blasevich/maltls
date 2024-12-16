@@ -11,7 +11,6 @@ result_dir = "../out/build_results/"
 [apply]
 #tags = ["cobalt", "dridex", "emotet", "trickbot"]
 tags = ["dridex", "trickbot"]
-#dir = "../pcap/dridex/validate/"
 #cobalt = "../pcap/cobalt/validate/"
 dridex = "../pcap/dridex/validate/"
 #emotet = "../pcap/emotet/validate/"
