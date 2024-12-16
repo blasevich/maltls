@@ -21,6 +21,4 @@ results_file = "../out/apply_results/out"
 
 
 [validate]
-#tags = ["cobalt", "dridex", "emotet", "trickbot"]
-tags = ["dridex", "trickbot"]
-results_dir = "../out/validate_results"
+results_file = "../out/validate_results/validate_out"
