@@ -12,13 +12,16 @@ result_dir = "../out/build_results/"
 #tags = ["cobalt", "dridex", "emotet", "trickbot"]
 tags = ["dridex", "trickbot"]
 #dir = "../pcap/dridex/validate/"
-dir = "../pcap/trickbot/validate/"
+#cobalt = "../pcap/cobalt/validate/"
+dridex = "../pcap/dridex/validate/"
+#emotet = "../pcap/emotet/validate/"
+trickbot = "../pcap/trickbot/validate/"
 out_dir = "../out/parsed_pcap/"
 results_dir = "../out/apply_results/"
+results_file = "../out/apply_results/out"
 
-########################################
-#cobalt = "../pcap/cobalt/validate/"
-#dridex = "../pcap/dridex/validate/"
-#emotet = "../pcap/emotet/validate/"
-#trickbot = "../pcap/trickbot/validate/"
-########################################
+
+[validate]
+#tags = ["cobalt", "dridex", "emotet", "trickbot"]
+tags = ["dridex", "trickbot"]
+results_dir = "../out/validate_results"
