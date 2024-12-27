@@ -19,4 +19,5 @@ results_file = "../out/apply_results/out"
 
 [validate]
 tags = ["cobalt", "dridex", "emotet", "trickbot"]
-results_file = "../out/validate_results/validate_out"
+results_file_dict = "../out/validate_results/validate_out_dict"
+results_file_all = "../out/validate_results/validate_out_all"
