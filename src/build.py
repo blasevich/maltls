@@ -11,7 +11,7 @@ def main():
 
     #get pcaps from config file *OK*
     #parse pcaps *OK*
-    filter = 'tls.handshake.type eq 1'
+    #filter = 'tls.handshake.type eq 1'
 
     for tag in data['build']['tags']:
         print(tag)
@@ -24,7 +24,7 @@ def main():
             out.write("TAG: {}\n".format(tag))
 
         for f in pcaps:
-            parse_pcap.parse_file(f, out_file, filter)
+            parse_pcap.parse_file(f, out_file)
 
     #build transition matrix *ok*
     #save transition matrix to file *ok*

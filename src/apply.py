@@ -21,7 +21,7 @@ def main():
         result_dir = data['apply']['results_dir']
 
         #parse pcap
-        filter = "tls.handshake.type eq 1"
+        #filter = "tls.handshake.type eq 1"
         for f in pcaps:
             #print("\n{}".format(f))
             name = f.split("/")[-1].split(".")[0]
@@ -29,7 +29,7 @@ def main():
             file_out = data['apply']['out_dir'] + "parsed_" + name ### will contain parsed pcap
             with open(file_out, 'w') as out:
                 out.write("TAG: {}\n".format(name))
-            parse_pcap.parse_file(f, file_out, filter)
+            parse_pcap.parse_file(f, file_out)
 
             D[name] = {}
 
