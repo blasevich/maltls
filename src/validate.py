@@ -3,7 +3,7 @@ import json
 
 D = {}
 
-def find_tag(str, tags):
+def find_tag(str, tags): # find a specific tag in a string
     found = 0
     i = 0
     while not found and i<len(tags):
@@ -14,22 +14,28 @@ def find_tag(str, tags):
 
     return tag
 
-def fun(tag, dict, file):
+def fun(tag, dict, file, out):
     for stream in dict:
-        print(stream)
-        D[tag]['num_sequences'] += 1
+        #print(stream)
+        D[tag]['num_sequences'] += 1 # keep track of the number of tls content type sequences
 
         dict[stream].pop('sequence')
         print(dict[stream].items())
         m = max(zip(dict[stream].values(), dict[stream].keys()))
         print(m)
 
+        print("classified as: {}.".format(m[1]), end=" ")
+
+        out.write("{} {} {} {} ".format(file, stream, dict[stream].items(), m[1]))
+
         if m[1] in file:
             print("OK")
             D[tag]['true'] += 1
+            out.write("OK\n")
         else:
             print("NOPE")
             D[tag]['false'] += 1
+            out.write("NOPE\n")
 
 def main():
     config_file = "../maltls.toml"
@@ -48,14 +54,16 @@ def main():
     with open(apply_results, 'r') as f:
         R = json.load(f)
 
-    for file in R:
-        print(file)
-        fun(find_tag(file, tags), R[file], file)
+    results_file_all = data['validate']['results_file_all']
+    with open(results_file_all, 'w') as out:
+        for file in R:
+            print(file)
+            fun(find_tag(file, tags), R[file], file, out)
 
     print(D)
 
-    results_file = data['validate']['results_file']
-    with open(results_file, 'w') as out:
+    results_file_dict = data['validate']['results_file_dict']
+    with open(results_file_dict, 'w') as out:
         json.dump(D, out)
             
 
