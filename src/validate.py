@@ -20,13 +20,13 @@ def fun(tag, dict, file, out):
         D[tag]['num_sequences'] += 1 # keep track of the number of tls content type sequences
 
         dict[stream].pop('sequence')
-        print(dict[stream].items())
+        print(dict[stream])
         m = max(zip(dict[stream].values(), dict[stream].keys()))
         print(m)
 
         print("classified as: {}.".format(m[1]), end=" ")
 
-        out.write("{} {} {} {} ".format(file, stream, dict[stream].items(), m[1]))
+        out.write("{} {} {} {} ".format(file, stream, dict[stream], m[1]))
 
         if m[1] in file:
             print("OK")
