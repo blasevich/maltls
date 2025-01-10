@@ -15,18 +15,17 @@ def main():
 
         #get pcap from config file *OK*
         dir = data['apply'][_tag] #where to find pcap files
-        only_pcap = dir + "*.pcap" #dir + "/" + "*.pcap"
+        only_pcap = dir + "*.pcap"
         pcaps = glob.glob(only_pcap)
 
         result_dir = data['apply']['results_dir']
 
         #parse pcap
-        #filter = "tls.handshake.type eq 1"
         for f in pcaps:
             #print("\n{}".format(f))
             name = f.split("/")[-1].split(".")[0]
             #print(name)
-            file_out = data['apply']['out_dir'] + "parsed_" + name ### will contain parsed pcap
+            file_out = data['apply']['out_dir'] + "parsed_" + name # will contain parsed pcap
             with open(file_out, 'w') as out:
                 out.write("TAG: {}\n".format(name))
             parse_pcap.parse_file(f, file_out)
@@ -39,8 +38,7 @@ def main():
 
                 for tag in data['apply']["tags"]:
                     result.write("{}\n".format(tag))
-                    #retrieve transition matrix
-                    markov = data['build']['result_dir'] + "result_" + tag
+                    markov = data['build']['result_dir'] + "result_" + tag #retrieve transition matrix
                     with open(markov, 'r') as f:
                         M = json.load(f)
                     

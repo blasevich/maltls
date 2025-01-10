@@ -7,7 +7,7 @@ def count_instances(List): #IN: a list; OUT: a dictionary. its keys are the list
             s.append(elem)
     #print(List)
     l = len(List)
-    d = {} # the dictionary
+    d = {} # dictionary
     for elem in s:
         c = 0 # count how many times elem is in List
         for i in range(l):
@@ -20,21 +20,21 @@ def count_instances(List): #IN: a list; OUT: a dictionary. its keys are the list
 
 def markov(file_in):
     lenghts = []
-    M = []
-    states = [] #will contain all the TLS message types seen in the flows
+    M = [] #will contain all the type sequences
+    states = [] #will contain all the TLS message types (i.e. states) seen in the flows
 
     ###################################################################
     with open(file_in) as f:
-        row = 0
+        row = 0 # cont the number of type sequences, or rows in the transition matrix
         for line in f.readlines():
             r = []
-            if not line.startswith('stream') and not line.startswith('TAG') and not line.startswith('\n'):
-                record = line.split()
+            if not line.startswith('stream') and not line.startswith('TAG') and not line.startswith('\n'): # get only the type sequences
+                record = line.split() #the type sequence
                 l = len(record)
                 lenghts.append(l)
                 for j in range(l):
                     r.append(record[j])
-                    if record[j] not in states:
+                    if record[j] not in states: #if a new state is found, add it to states
                         states.append(record[j])
                 M.append(r)
                 #print(r)
@@ -61,7 +61,7 @@ def markov(file_in):
     P = {}
     for s in states:
         #print("STATE '{}': ".format(s), end=" ")
-        next_states = []
+        next_states = [] #
         for i in range(row):
             l = len(M[i])
             for j, elem in enumerate(M[i]):

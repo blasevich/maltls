@@ -24,7 +24,7 @@ def fun(tag, dict, file, out):
         m = max(zip(dict[stream].values(), dict[stream].keys()))
         print(m)
 
-        print("classified as: {}.".format(m[1]), end=" ")
+        print("classified as: {}.".format(m[1]), end=" ") # case m == 0 ...
 
         out.write("{} {} {} {} ".format(file, stream, dict[stream], m[1]))
 

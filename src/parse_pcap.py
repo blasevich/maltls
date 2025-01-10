@@ -25,7 +25,7 @@ def parse_stream(filename_in, filename_out, tls_streams, params):
                     if 'TLS' in packet:
                         try:
                             tls_type = packet.tls.record_content_type
-                            if tls_type == "22":
+                            if tls_type == "22": ### more than one type in the same packet ???
                                 hdsk_type = packet.tls.handshake_type
                                 out.write("{}".format(tls_type))
                                 for field in hdsk_type.all_fields:

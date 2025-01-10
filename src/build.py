@@ -9,34 +9,27 @@ def main():
     with open(config_file, "rb") as f:
         data = tomllib.load(f)
 
-    #get pcaps from config file *OK*
-    #parse pcaps *OK*
-    #filter = 'tls.handshake.type eq 1'
-
     for tag in data['build']['tags']:
         print(tag)
-        dir = data['build'][tag]
-        only_pcap = dir + "*.pcap" #dir + "/" + "*.pcap"
-        pcaps = glob.glob(only_pcap)
+        dir = "../pcap/types_dst/" + data['build'][tag]
+        only_pcap = dir + "*.pcap"
+        pcaps = glob.glob(only_pcap) #get pcap files
 
-        out_file = data['build']['out_dir'] + "out_" + tag #parsed pcap
+        out_file = data['build']['out_dir'] + "out_" + tag #output file for parsed pcap
         with open(out_file, 'w') as out:
             out.write("TAG: {}\n".format(tag))
 
         for f in pcaps:
-            parse_pcap.parse_file(f, out_file)
+            parse_pcap.parse_file(f, out_file) #parse pcap files
 
-    #build transition matrix *ok*
-    #save transition matrix to file *ok*
-    for tag in data['build']['tags']:
-        out_file = data['build']['out_dir'] + "out_" + tag #transition matrix
+    for tag in data['build']['tags']: # for every malware build a Markov chain
+        out_file = data['build']['out_dir'] + "out_" + tag #output file for transition matrix
         result = build_markov.markov(out_file)
 
         result_file = data['build']['result_dir'] + "result_" + tag
         #print(result)
         with open(result_file, 'w') as out:
-            json.dump(result, out)
-
+            json.dump(result, out) #save transition matrix
 
 if __name__ == '__main__':
     main()
