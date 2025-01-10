@@ -1,18 +1,30 @@
+threshold = 0
+
 [build]
 tags = ["cobalt", "dridex", "emotet", "trickbot"]
-cobalt = "../pcap/cobalt/build/"
-dridex = "../pcap/dridex/build/"
-emotet = "../pcap/emotet/build/"
-trickbot = "../pcap/trickbot/build/"
+
+dirs = ["../pcap/dst/", "../pcap/src_dst/"]
+
+cobalt = "cobalt/build/"
+dridex = "dridex/build/"
+emotet = "emotet/build/"
+trickbot = "trickbot/build/"
+
 out_dir = "../out/parsed_malpcap/"
 result_dir = "../out/build_results/"
 
+# length_dst length_src_dst types_dst types_src_dst
+
 [apply]
 tags = ["cobalt", "dridex", "emotet", "trickbot"]
-cobalt = "../pcap/cobalt/validate/"
-dridex = "../pcap/dridex/validate/"
-emotet = "../pcap/emotet/validate/"
-trickbot = "../pcap/trickbot/validate/"
+
+dirs = ["../pcap/dst/", "../pcap/src_dst/"]
+
+cobalt = "cobalt/validate/"
+dridex = "dridex/validate/"
+emotet = "emotet/validate/"
+trickbot = "trickbot/validate/"
+
 out_dir = "../out/parsed_pcap/"
 results_dir = "../out/apply_results/"
 results_file = "../out/apply_results/out"
