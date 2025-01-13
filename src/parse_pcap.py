@@ -9,10 +9,8 @@ def search_tls(filename_in, params, filter):
         for packet in capture:
             try:
                 tls_streams.append(int(packet.tcp.stream))
-                #clients.append(packet.ip.src)
             except AttributeError:
                 print(traceback.format_exc())
-    #print(tls_streams)
     return tls_streams
 
 def parse_stream(filename_in, filename_out, tls_streams, params):
@@ -23,19 +21,44 @@ def parse_stream(filename_in, filename_out, tls_streams, params):
             with pyshark.FileCapture(filename_in, custom_parameters=params, keep_packets=False, debug=False, display_filter="tcp.stream eq %d and tls" % stream_number) as capture:
                 for packet in capture:
                     if 'TLS' in packet:
-                        try:
-                            tls_type = packet.tls.record_content_type
-                            if tls_type == "22": ### more than one type in the same packet ???
-                                hdsk_type = packet.tls.handshake_type
-                                out.write("{}".format(tls_type))
-                                for field in hdsk_type.all_fields:
-                                    out.write(":{}".format(field.show))
-                                out.write(" ")
-                            else:
-                                out.write("{} ".format(tls_type))
-                        except AttributeError:
-                            #print("attribute error: {}".format(packet.number))
-                            pass
+                        for record in packet.get_multiple_layers("TLS"):#for all TLS records in packet
+                            try:
+                                content_type = record.record_content_type.show #record content type
+                                out.write(content_type)
+
+                                if content_type == "22": #if handshake protocol, find all handshake types
+                                    out.write(":{}".format(record.handshake_type.show))
+                                    handskape_types = record.handshake_type.alternate_fields
+                                    if handskape_types:
+                                        for field in handskape_types:
+                                            out.write(":{}".format(field.show))
+
+                                other_content_types = record.record_content_type.alternate_fields
+                                if other_content_types:
+                                    for field in other_content_types:
+                                        out.write(",{}".format(field.show))
+
+                                out.write(",")
+
+                            except:
+                                pass
+
+                        out.write(" ")
+
+                        # try:
+                        #     tls_type = packet.tls.record_content_type
+                        #     if tls_type == "22": ### more than one type in the same packet ???
+                        #         hdsk_type = packet.tls.handshake_type
+                        #         out.write("{}".format(tls_type))
+                        #         for field in hdsk_type.all_fields:
+                        #             out.write(":{}".format(field.show))
+                        #         out.write(" ")
+                        #     else:
+                        #         out.write("{} ".format(tls_type))
+                        # except AttributeError:
+                        #     #print("attribute error: {}".format(packet.number))
+                        #     pass
+
         out.write("\n")
 
 def find_state(n):
