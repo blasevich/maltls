@@ -14,7 +14,7 @@ def main():
     for _tag in data['apply']["tags"]:
 
         #get pcap from config file *OK*
-        dir = data['apply'][_tag] #where to find pcap files
+        dir = "../pcap/dst/" + data['apply'][_tag] #where to find pcap files ### dirs = ["../pcap/dst/", "../pcap/src_dst/"]
         only_pcap = dir + "*.pcap"
         pcaps = glob.glob(only_pcap)
 

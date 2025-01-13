@@ -3,7 +3,7 @@ threshold = 0
 [build]
 tags = ["cobalt", "dridex", "emotet", "trickbot"]
 
-dirs = ["../pcap/dst/", "../pcap/src_dst/"]
+#dirs = ["../pcap/dst/", "../pcap/src_dst/"]
 
 cobalt = "cobalt/build/"
 dridex = "dridex/build/"
@@ -18,7 +18,7 @@ result_dir = "../out/build_results/"
 [apply]
 tags = ["cobalt", "dridex", "emotet", "trickbot"]
 
-dirs = ["../pcap/dst/", "../pcap/src_dst/"]
+#dirs = ["../pcap/dst/", "../pcap/src_dst/"]
 
 cobalt = "cobalt/validate/"
 dridex = "dridex/validate/"

@@ -9,9 +9,10 @@ def main():
     with open(config_file, "rb") as f:
         data = tomllib.load(f)
 
+    #for pcap_directory in data['build']['dirs']:
     for tag in data['build']['tags']:
         print(tag)
-        dir = "../pcap/types_dst/" + data['build'][tag]
+        dir = "../pcap/dst/" + data['build'][tag] #dirs = ["../pcap/dst/", "../pcap/src_dst/"]
         only_pcap = dir + "*.pcap"
         pcaps = glob.glob(only_pcap) #get pcap files
 
