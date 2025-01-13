@@ -11,7 +11,7 @@ def main():
 
     #for pcap_directory in data['build']['dirs']:
     for tag in data['build']['tags']:
-        print(tag)
+        print("BUILD - parsing pcap files for {}".format(tag))
         dir = "../pcap/dst/" + data['build'][tag] #dirs = ["../pcap/dst/", "../pcap/src_dst/"]
         only_pcap = dir + "*.pcap"
         pcaps = glob.glob(only_pcap) #get pcap files
@@ -24,6 +24,7 @@ def main():
             parse_pcap.parse_file(f, out_file) #parse pcap files
 
     for tag in data['build']['tags']: # for every malware build a Markov chain
+        print("BUILD - creating Markov chain for {}".format(tag))
         out_file = data['build']['out_dir'] + "out_" + tag #output file for transition matrix
         result = build_markov.markov(out_file)
 
@@ -33,4 +34,6 @@ def main():
             json.dump(result, out) #save transition matrix
 
 if __name__ == '__main__':
+    print("BUILD - starting...")
     main()
+    print("BUILD - done.")
