@@ -5,7 +5,7 @@ import glob
 import json
 import argparse
 
-def main(parse, build):
+def main(parse):
     config_file = "../maltls.toml"
     with open(config_file, "rb") as f:
         data = tomllib.load(f)
@@ -24,16 +24,16 @@ def main(parse, build):
 
             for f in pcaps:
                 parse_pcap.parse_file(f, out_file) #parse pcap files
-    if build:
-        for tag in data['build']['tags']: # for every malware build a Markov chain
-            print("BUILD - creating Markov chain for {}".format(tag))
-            out_file = data['build']['out_dir'] + "out_" + tag #output file for transition matrix
-            result = build_markov.markov(out_file)
+                
+    for tag in data['build']['tags']: # for every malware build a Markov chain
+        print("BUILD - creating Markov chain for {}".format(tag))
+        out_file = data['build']['out_dir'] + "out_" + tag #output file for transition matrix
+        result = build_markov.markov(out_file)
 
-            result_file = data['build']['result_dir'] + "result_" + tag
-            #print(result)
-            with open(result_file, 'w') as out:
-                json.dump(result, out) #save transition matrix
+        result_file = data['build']['result_dir'] + "result_" + tag
+        #print(result)
+        with open(result_file, 'w') as out:
+            json.dump(result, out) #save transition matrix
 
 if __name__ == '__main__':
     
@@ -42,12 +42,10 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     parse_files = True
-    build_model = True
 
     if args.buildonly:
-        print("ok")
         parse_files = False        
 
     print("BUILD - starting...")
-    main(parse_files, build_model)
+    main(parse_files)
     print("BUILD - done.")

@@ -3,8 +3,9 @@ import parse_pcap
 import tomllib
 import glob
 import json
+import argparse
 
-def main():
+def main(parse):
     config_file = "../maltls.toml"
     with open(config_file, "rb") as f:
         data = tomllib.load(f)
@@ -12,8 +13,8 @@ def main():
     D = {}
 
     for _tag in data['apply']["tags"]:
+        #print("APPLY - {}".format(_tag))
 
-        #get pcap from config file *OK*
         dir = "../pcap/dst/" + data['apply'][_tag] #where to find pcap files ### dirs = ["../pcap/dst/", "../pcap/src_dst/"]
         only_pcap = dir + "*.pcap"
         pcaps = glob.glob(only_pcap)
@@ -22,13 +23,16 @@ def main():
 
         #parse pcap
         for f in pcaps:
-            #print("\n{}".format(f))
+            #print(" APPLY - file {}".format(f))
+
             name = f.split("/")[-1].split(".")[0]
             #print(name)
             file_out = data['apply']['out_dir'] + "parsed_" + name # will contain parsed pcap
-            with open(file_out, 'w') as out:
-                out.write("TAG: {}\n".format(name))
-            parse_pcap.parse_file(f, file_out)
+
+            if parse:
+                with open(file_out, 'w') as out:
+                    out.write("TAG: {}\n".format(name))
+                parse_pcap.parse_file(f, file_out)
 
             D[name] = {}
 
@@ -67,4 +71,16 @@ def main():
             json.dump(D, out)
 
 if __name__ == '__main__':
-    main()
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--applyonly", help="only apply the model, do not parse files", action="store_true")
+    args = parser.parse_args()
+
+    parse_files = True
+
+    if args:
+        parse_files = False
+
+    print("APPLY - starting...")        
+    main(parse_files)
+    print("APPLY - done.")
