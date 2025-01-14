@@ -59,16 +59,17 @@ def markov(file_in):
 
     #compute transition matrix
     P = {}
-    for s in states:
+    for s in states: # for every state, find all next states
         #print("STATE '{}': ".format(s), end=" ")
-        next_states = [] #
+        next_states = []
         for i in range(row):
             l = len(M[i])
             for j, elem in enumerate(M[i]):
                 if s==elem and j+1 < l:
                     next_states.append(M[i][j+1])
-        d = count_instances(next_states)
-        P[s] = d
+        if next_states:
+            d = count_instances(next_states)
+            P[s] = d
 
     ALL.append(P)
     ALL.append(T)
