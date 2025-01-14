@@ -14,7 +14,7 @@ def main(parse):
         #for pcap_directory in data['build']['dirs']:
         for tag in data['build']['tags']:
             print("BUILD - parsing pcap files for {}".format(tag))
-            
+
             dir = "../pcap/dst/" + data['build'][tag]
             ###dir = "../pcap/src_dst/" + data['build'][tag] #dirs = ["../pcap/dst/", "../pcap/src_dst/"]
 
@@ -25,8 +25,10 @@ def main(parse):
             with open(out_file, 'w') as out:
                 out.write("TAG: {}\n".format(tag))
 
+            flows = 0 #number of flows
             for f in pcaps:
-                parse_pcap.parse_file(f, out_file) #parse pcap files
+                flows = flows + parse_pcap.parse_file(f, out_file) #parse pcap files
+            print("\nnumber of {} flows: {}".format(tag, flows))
                 
     for tag in data['build']['tags']: # for every malware build a Markov chain
         print("BUILD - creating Markov chain for {}".format(tag))

@@ -109,10 +109,15 @@ def parse_file(filename_in, filename_out):
     ###filter = "tls.handshake.type eq 1" #client hello
     filter = "tls.handshake.type eq 2" #server hello
 
+    flows = 0
+
     tls_streams = search_tls(filename_in, params, filter)
+    flows = flows + len(tls_streams)
 
     parse_stream(filename_in, filename_out, tls_streams, params)
     ###parse_stream_length(filename_in, filename_out, tls_streams, params, clients)
+
+    return flows
 
 
 #content types:
