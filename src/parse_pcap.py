@@ -4,7 +4,6 @@ import traceback
 #clients = []
 
 def search_tls(filename_in, params, filter):
-    print("\tparse - searching TLS streams in {}".format(filename_in))
     tls_streams = []
     with pyshark.FileCapture(filename_in, custom_parameters=params, keep_packets=False, debug=False, display_filter=filter) as capture:
         for packet in capture:
@@ -106,12 +105,14 @@ def parse_file(filename_in, filename_out):
     params = ["-o", "tcp.desegment_tcp_streams:TRUE",
         "-o", "tls.desegment_ssl_records:TRUE",
         "-o", "tls.desegment_ssl_application_data:TRUE"]
-    #filter = "tls.handshake.type eq 1" #client hello
+    
+    ###filter = "tls.handshake.type eq 1" #client hello
     filter = "tls.handshake.type eq 2" #server hello
 
     tls_streams = search_tls(filename_in, params, filter)
+
     parse_stream(filename_in, filename_out, tls_streams, params)
-    #parse_stream_length(filename_in, filename_out, tls_streams, params, clients)
+    ###parse_stream_length(filename_in, filename_out, tls_streams, params, clients)
 
 
 #content types:

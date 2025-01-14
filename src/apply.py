@@ -13,9 +13,10 @@ def main(parse):
     D = {}
 
     for _tag in data['apply']["tags"]:
-        #print("APPLY - {}".format(_tag))
 
-        dir = "../pcap/dst/" + data['apply'][_tag] #where to find pcap files ### dirs = ["../pcap/dst/", "../pcap/src_dst/"]
+        dir = "../pcap/dst/" + data['apply'][_tag] #where to find pcap files
+        ###dir = "../pcap/src_dst/" + data['apply'][_tag] ### dirs = ["../pcap/dst/", "../pcap/src_dst/"]
+        
         only_pcap = dir + "*.pcap"
         pcaps = glob.glob(only_pcap)
 
@@ -23,8 +24,6 @@ def main(parse):
 
         #parse pcap
         for f in pcaps:
-            #print(" APPLY - file {}".format(f))
-
             name = f.split("/")[-1].split(".")[0]
             #print(name)
             file_out = data['apply']['out_dir'] + "parsed_" + name # will contain parsed pcap

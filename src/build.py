@@ -14,7 +14,10 @@ def main(parse):
         #for pcap_directory in data['build']['dirs']:
         for tag in data['build']['tags']:
             print("BUILD - parsing pcap files for {}".format(tag))
-            dir = "../pcap/dst/" + data['build'][tag] #dirs = ["../pcap/dst/", "../pcap/src_dst/"]
+            
+            dir = "../pcap/dst/" + data['build'][tag]
+            ###dir = "../pcap/src_dst/" + data['build'][tag] #dirs = ["../pcap/dst/", "../pcap/src_dst/"]
+
             only_pcap = dir + "*.pcap"
             pcaps = glob.glob(only_pcap) #get pcap files
 
