@@ -15,11 +15,15 @@ def find_tag(str, tags): # find a specific tag in a string
     return tag
 
 def fun(tag, dict, file, out, threshold):
+    sequences = 0
+
     for stream in dict:
         #print(stream)
         D[tag]['num_sequences'] += 1 # keep track of the number of tls content type sequences
 
         dict[stream].pop('sequence')
+        sequences += 1
+
         print(dict[stream])
         m = max(zip(dict[stream].values(), dict[stream].keys()))
         print(m)
@@ -46,6 +50,8 @@ def fun(tag, dict, file, out, threshold):
                 D[tag]['false'] += 1
                 out.write("NOPE\n")
 
+    return sequences
+
 def main():
     config_file = "../maltls.toml"
     with open(config_file, "rb") as f:
@@ -65,12 +71,16 @@ def main():
 
     results_file_all = data['validate']['results_file_all']
     threshold = data['threshold']
+
+    sequences = 0 #double check number of sequences
+
     with open(results_file_all, 'w') as out:
         for file in R:
             print(file)
-            fun(find_tag(file, tags), R[file], file, out, threshold)
+            sequences = sequences + fun(find_tag(file, tags), R[file], file, out, threshold)
 
     print(D)
+    print("\nnumber of sequences: {}".format(sequences))
 
     results_file_dict = data['validate']['results_file_dict']
     with open(results_file_dict, 'w') as out:
