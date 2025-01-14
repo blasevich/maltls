@@ -14,7 +14,7 @@ def find_tag(str, tags): # find a specific tag in a string
 
     return tag
 
-def fun(tag, dict, file, out):
+def fun(tag, dict, file, out, threshold):
     for stream in dict:
         #print(stream)
         D[tag]['num_sequences'] += 1 # keep track of the number of tls content type sequences
@@ -24,18 +24,27 @@ def fun(tag, dict, file, out):
         m = max(zip(dict[stream].values(), dict[stream].keys()))
         print(m)
 
-        print("classified as: {}.".format(m[1]), end=" ") # case m == 0 ...
-
-        out.write("{} {} {} {} ".format(file, stream, dict[stream], m[1]))
-
-        if m[1] in file:
-            print("OK")
-            D[tag]['true'] += 1
-            out.write("OK\n")
+        if m[0] <= threshold:
+            print("classified as: NONE.", end=" ")
+            out.write("{} {} {} {} ".format(file, stream, dict[stream], "NONE"))
+            if "NONE" in file:
+                print("OK")
+                out.write("OK\n")
+            else:
+                print("NOPE")
+                out.write("NOPE\n")
         else:
-            print("NOPE")
-            D[tag]['false'] += 1
-            out.write("NOPE\n")
+            print("classified as: {}.".format(m[1]), end=" ")
+            out.write("{} {} {} {} ".format(file, stream, dict[stream], m[1])) 
+            #20211013_dridex 3 {'dridex': 0.057692307692307696, 'trickbot': 0.05589827058997696} dridex OK
+            if m[1] in file:
+                print("OK")
+                D[tag]['true'] += 1
+                out.write("OK\n")
+            else:
+                print("NOPE")
+                D[tag]['false'] += 1
+                out.write("NOPE\n")
 
 def main():
     config_file = "../maltls.toml"
@@ -55,10 +64,11 @@ def main():
         R = json.load(f)
 
     results_file_all = data['validate']['results_file_all']
+    threshold = data['threshold']
     with open(results_file_all, 'w') as out:
         for file in R:
             print(file)
-            fun(find_tag(file, tags), R[file], file, out)
+            fun(find_tag(file, tags), R[file], file, out, threshold)
 
     print(D)
 
