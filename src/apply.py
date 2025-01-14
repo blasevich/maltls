@@ -16,7 +16,7 @@ def main(parse):
 
         dir = "../pcap/dst/" + data['apply'][_tag] #where to find pcap files
         ###dir = "../pcap/src_dst/" + data['apply'][_tag] ### dirs = ["../pcap/dst/", "../pcap/src_dst/"]
-        
+
         only_pcap = dir + "*.pcap"
         pcaps = glob.glob(only_pcap)
 
@@ -77,7 +77,8 @@ if __name__ == '__main__':
 
     parse_files = True
 
-    if args:
+    if args.applyonly:
+        print("ok")
         parse_files = False
 
     print("APPLY - starting...")        
