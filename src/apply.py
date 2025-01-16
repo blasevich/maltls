@@ -39,30 +39,31 @@ def main(parse):
             with open(result_file, 'w') as result:
                 result.write("{}\n".format(name))
 
-                for tag in data['apply']["tags"]: #doesn't work with none
-                    result.write("{}\n".format(tag))
-                    markov = data['build']['result_dir'] + "result_" + tag #retrieve transition matrix
-                    with open(markov, 'r') as f:
-                        M = json.load(f)
+                for tag in data['apply']["tags"]:
+                    if tag != "none": #test !
+                        result.write("{}\n".format(tag))
+                        markov = data['build']['result_dir'] + "result_" + tag #retrieve transition matrix
+                        with open(markov, 'r') as f:
+                            M = json.load(f)
                     
-                    with open(file_out, 'r') as fo:
-                        for s in fo.readlines():
-                            if not s.startswith('stream') and not s.startswith('TAG') and not s.startswith('\n'):
-                                x = s.split()
-                                p = get_probability.prob(M[0], M[1], M[2], x)
-                                print("{}: {}".format(x, p))
-                                result.write("{} {}\n".format(x, p)) #write tls sequence + probability
+                        with open(file_out, 'r') as fo:
+                            for s in fo.readlines():
+                                if not s.startswith('stream') and not s.startswith('TAG') and not s.startswith('\n'):
+                                    x = s.split()
+                                    p = get_probability.prob(M[0], M[1], M[2], x)
+                                    print("{}: {}".format(x, p))
+                                    result.write("{} {}\n".format(x, p)) #write tls sequence + probability
 
-                                D[name][stream_number]["sequence"] = x
-                                D[name][stream_number][tag] = p
-                            elif s.startswith('stream'):
-                                print("{}".format(s), end=" ")
-                                result.write("{}".format(s))
+                                    D[name][stream_number]["sequence"] = x
+                                    D[name][stream_number][tag] = p
+                                elif s.startswith('stream'):
+                                    print("{}".format(s), end=" ")
+                                    result.write("{}".format(s))
 
-                                x = s.split(':')
-                                stream_number = x[1].strip()
-                                if stream_number not in D[name].keys():
-                                    D[name][stream_number] = {}
+                                    x = s.split(':')
+                                    stream_number = x[1].strip()
+                                    if stream_number not in D[name].keys():
+                                        D[name][stream_number] = {}
 
     #print(D)
     result_file = data['apply']['results_file']
