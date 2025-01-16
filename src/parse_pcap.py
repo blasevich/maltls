@@ -1,7 +1,6 @@
 import pyshark
 import traceback
-
-clients = []
+import ipaddress
 
 def search_tls(filename_in, params, filter):
     tls_streams = []
@@ -48,7 +47,7 @@ def parse_stream(filename_in, filename_out, tls_streams, params): #in: pcap file
 
         out.write("\n")
 
-def parse_stream_length(filename_in, filename_out, tls_streams, params, src): #in: pcap files, out: lists of packet lengths
+def parse_stream_length(filename_in, filename_out, tls_streams, params): #in: pcap files, out: lists of packet lengths
     print("\tparse - parsing file {}".format(filename_in))
     with open(filename_out, "a") as out:
         out.write("TAG: {}".format(filename_in))
@@ -62,8 +61,8 @@ def parse_stream_length(filename_in, filename_out, tls_streams, params, src): #i
                             len = int(packet.length) #get packet length
                             l = len // 150 #map packet length to a state (buckets of length 150)
 
-                            # if packet.ip.src == src[i]: ## needed only when considering src==client packets
-                            #     l = l*-1
+                            if ipaddress.ip_address(packet.ip.src).is_private: #if packet.ip.src is private IP
+                                l = l * -1
 
                             out.write("{} ".format(l))
                             #print(l)
@@ -88,7 +87,7 @@ def parse_file(filename_in, filename_out):
     flows = flows + len(tls_streams)
 
     ###parse_stream(filename_in, filename_out, tls_streams, params) #tls content types
-    parse_stream_length(filename_in, filename_out, tls_streams, params, clients) #packets lengths
+    parse_stream_length(filename_in, filename_out, tls_streams, params) #packets lengths
 
     return flows
 
