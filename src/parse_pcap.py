@@ -1,7 +1,7 @@
 import pyshark
 import traceback
 
-#clients = []
+clients = []
 
 def search_tls(filename_in, params, filter):
     tls_streams = []
@@ -13,7 +13,7 @@ def search_tls(filename_in, params, filter):
                 print(traceback.format_exc())
     return tls_streams
 
-def parse_stream(filename_in, filename_out, tls_streams, params):
+def parse_stream(filename_in, filename_out, tls_streams, params): #in: pcap files, out: lists of tls types
     print("\tparse - parsing file {}".format(filename_in))
     with open(filename_out, "a") as out:
         out.write("TAG: {}".format(filename_in))
@@ -46,36 +46,10 @@ def parse_stream(filename_in, filename_out, tls_streams, params):
 
                         out.write(" ")
 
-                        # try:
-                        #     tls_type = packet.tls.record_content_type
-                        #     if tls_type == "22": ### more than one type in the same packet ???
-                        #         hdsk_type = packet.tls.handshake_type
-                        #         out.write("{}".format(tls_type))
-                        #         for field in hdsk_type.all_fields:
-                        #             out.write(":{}".format(field.show))
-                        #         out.write(" ")
-                        #     else:
-                        #         out.write("{} ".format(tls_type))
-                        # except AttributeError:
-                        #     #print("attribute error: {}".format(packet.number))
-                        #     pass
-
         out.write("\n")
 
-def find_state(n):
-    s = [(0,150), (150,300), (300,450), (450,600), (600,750), (750,900), (900,1050), (1050,1200), (1200,1350), (1350,9999)]
-
-    found = False
-    i = 0
-
-    while not found and i<10:
-        if n >= s[i][0] and n < s[i][1]:
-            found = True
-        i += 1
-
-    return i
-
-def parse_stream_length(filename_in, filename_out, tls_streams, params, src):
+def parse_stream_length(filename_in, filename_out, tls_streams, params, src): #in: pcap files, out: lists of packet lengths
+    print("\tparse - parsing file {}".format(filename_in))
     with open(filename_out, "a") as out:
         out.write("TAG: {}".format(filename_in))
         i = 0
@@ -85,12 +59,11 @@ def parse_stream_length(filename_in, filename_out, tls_streams, params, src):
                 for packet in capture:
                     if 'TLS' in packet:
                         try:
-                            len = int(packet.length)
+                            len = int(packet.length) #get packet length
+                            l = len // 150 #map packet length to a state (buckets of length 150)
 
-                            l = find_state(len)
-
-                            if packet.ip.src == src[i]:
-                                l = l*-1
+                            # if packet.ip.src == src[i]: ## needed only when considering src==client packets
+                            #     l = l*-1
 
                             out.write("{} ".format(l))
                             #print(l)
@@ -106,7 +79,7 @@ def parse_file(filename_in, filename_out):
         "-o", "tls.desegment_ssl_records:TRUE",
         "-o", "tls.desegment_ssl_application_data:TRUE"]
     
-    ###filter = "tls.handshake.type eq 1" #client hello
+    #filter = "tls.handshake.type eq 1" #client hello
     filter = "tls.handshake.type eq 2" #server hello
 
     flows = 0
@@ -114,8 +87,8 @@ def parse_file(filename_in, filename_out):
     tls_streams = search_tls(filename_in, params, filter)
     flows = flows + len(tls_streams)
 
-    parse_stream(filename_in, filename_out, tls_streams, params)
-    ###parse_stream_length(filename_in, filename_out, tls_streams, params, clients)
+    ###parse_stream(filename_in, filename_out, tls_streams, params) #tls content types
+    parse_stream_length(filename_in, filename_out, tls_streams, params, clients) #packets lengths
 
     return flows
 
