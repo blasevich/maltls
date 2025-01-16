@@ -28,7 +28,7 @@ def main(parse):
             flows = 0 #number of flows
             for f in pcaps:
                 flows = flows + parse_pcap.parse_file(f, out_file) #parse pcap files
-            print("\nnumber of {} flows: {}".format(tag, flows))
+            print("number of {} flows: {}\n".format(tag, flows))
                 
     for tag in data['build']['tags']: # for every malware build a Markov chain
         print("BUILD - creating Markov chain for {}".format(tag))

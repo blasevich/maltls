@@ -4,7 +4,7 @@ def enter_exit_probability(dict, state):
     try:
         return dict[state]
     except:
-        print("{}: no corresponding state".format(state))
+        #print("{}: no corresponding state".format(state))
         return 0
     
 def transition_probability(P, X):
@@ -17,7 +17,7 @@ def transition_probability(P, X):
         except:
             # p = 0 # exit
             # v.append(p)
-            print("{} -> {}: no corresponding state".format(X[i], X[i+1]))
+            #print("{} -> {}: no corresponding state".format(X[i], X[i+1]))
             return 0
     M = 1
     #print(v)

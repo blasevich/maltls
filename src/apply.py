@@ -39,7 +39,7 @@ def main(parse):
             with open(result_file, 'w') as result:
                 result.write("{}\n".format(name))
 
-                for tag in data['apply']["tags"]:
+                for tag in data['apply']["tags"]: #doesn't work with none
                     result.write("{}\n".format(tag))
                     markov = data['build']['result_dir'] + "result_" + tag #retrieve transition matrix
                     with open(markov, 'r') as f:
@@ -64,7 +64,7 @@ def main(parse):
                                 if stream_number not in D[name].keys():
                                     D[name][stream_number] = {}
 
-    print(D)
+    #print(D)
     result_file = data['apply']['results_file']
     with open(result_file, 'w') as out:
             json.dump(D, out)
@@ -78,7 +78,6 @@ if __name__ == '__main__':
     parse_files = True
 
     if args.applyonly:
-        print("ok")
         parse_files = False
 
     print("APPLY - starting...")        
