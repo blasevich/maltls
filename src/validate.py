@@ -22,13 +22,13 @@ def fun(tag, dict, file, out, threshold, max_length, min_length):
     for stream in dict:
         #print(stream)
         length = len(dict[stream]['sequence'])
+        sequences += 1
 
         if length>=min_length and length<=max_length: # if len sequence <min or >max => dont consider this flow
             D[tag]['num_sequences'] += 1
             actual_sequences += 1
             #print(dict[stream]['sequence'])
             dict[stream].pop('sequence')
-            sequences += 1
 
             print(dict[stream])
             m = max(zip(dict[stream].values(), dict[stream].keys()))
