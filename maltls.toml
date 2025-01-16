@@ -1,10 +1,9 @@
 threshold = 0
+max_length = 9999
+min_length = 0
 
 [build]
-tags = ["cobalt", "dridex", "emotet", "trickbot"]
-
-#dirs = ["../pcap/dst/", "../pcap/src_dst/"]
-
+tags = ["dridex", "emotet", "trickbot", "cobalt"]
 cobalt = "cobalt/build/"
 dridex = "dridex/build/"
 emotet = "emotet/build/"
@@ -13,17 +12,14 @@ trickbot = "trickbot/build/"
 out_dir = "../out/parsed_malpcap/"
 result_dir = "../out/build_results/"
 
-# length_dst length_src_dst types_dst types_src_dst
-
 [apply]
-tags = ["cobalt", "dridex", "emotet", "trickbot"]
-
-#dirs = ["../pcap/dst/", "../pcap/src_dst/"]
-
+#tags = ["none", "dridex", "emotet", "trickbot", "cobalt"]
+tags = ["dridex", "emotet", "trickbot", "cobalt"]
 cobalt = "cobalt/validate/"
 dridex = "dridex/validate/"
 emotet = "emotet/validate/"
 trickbot = "trickbot/validate/"
+none = "none/"
 
 out_dir = "../out/parsed_pcap/"
 results_dir = "../out/apply_results/"
