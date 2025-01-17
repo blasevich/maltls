@@ -1,16 +1,15 @@
-threshold = 0
-min_length = 3 #min flow length
-max_length = 50 #max flow length
 
 [build]
+min_length = 3 #min flow length
+max_length = 50 #max flow length
 tags = ["dridex", "emotet", "trickbot", "cobalt"]
 cobalt = "cobalt/build/"
 dridex = "dridex/build/"
 emotet = "emotet/build/"
 trickbot = "trickbot/build/"
 
-out_dir = "../out/parsed_malpcap/"
-result_dir = "../out/build_results/"
+out_dir = "../out/build/parsed_pcap/"
+results_dir = "../out/build/results/"
 
 [apply]
 #tags = ["none", "dridex", "emotet", "trickbot", "cobalt"]
@@ -21,11 +20,13 @@ emotet = "emotet/validate/"
 trickbot = "trickbot/validate/"
 none = "none/"
 
-out_dir = "../out/parsed_pcap/"
-results_dir = "../out/apply_results/"
-results_file = "../out/apply_results/out"
+out_dir = "../out/apply/parsed_pcap/"
+results_dir = "../out/apply/results/"
 
 [validate]
+threshold = 0
+min_length = 3 #min flow length
+max_length = 50 #max flow length
 tags = ["cobalt", "dridex", "emotet", "trickbot"]
 results_file_dict = "../out/validate_results/validate_out_dict"
 results_file_all = "../out/validate_results/validate_out_all"

@@ -5,37 +5,44 @@ import glob
 import json
 import argparse
 
-def main(parse):
+def main(parse, mode, server_only):
+
+    if server_only:
+        sub_dir = mode + "/dst/"
+    else:
+        sub_dir = mode + "/src_dst/"
+
     config_file = "../maltls.toml"
     with open(config_file, "rb") as f:
         data = tomllib.load(f)
 
     if parse:
-        #for pcap_directory in data['build']['dirs']:
         for tag in data['build']['tags']:
             print("BUILD - parsing pcap files for {}".format(tag))
 
-            dir = "../pcap/dst/" + data['build'][tag]
-            ###dir = "../pcap/src_dst/" + data['build'][tag] #dirs = ["../pcap/dst/", "../pcap/src_dst/"]
+            if server_only:
+                dir = "../pcap/dst/" + data['build'][tag]
+            else:
+                dir = "../pcap/src_dst/" + data['build'][tag]
 
             only_pcap = dir + "*.pcap"
             pcaps = glob.glob(only_pcap) #get pcap files
 
-            out_file = data['build']['out_dir'] + "out_" + tag #output file for parsed pcap
+            out_file = data['build']['out_dir'] + sub_dir + "out_" + tag #output file for parsed pcap
             with open(out_file, 'w') as out:
                 out.write("TAG: {}\n".format(tag))
 
             flows = 0 #number of flows
             for f in pcaps:
-                flows = flows + parse_pcap.parse_file(f, out_file) #parse pcap files
+                flows = flows + parse_pcap.parse_file(f, out_file, mode) #parse pcap files
             print("number of {} flows: {}\n".format(tag, flows))
                 
     for tag in data['build']['tags']: # for every malware build a Markov chain
         print("BUILD - creating Markov chain for {}".format(tag))
-        out_file = data['build']['out_dir'] + "out_" + tag #output file for transition matrix
+        out_file = data['build']['out_dir'] + sub_dir + "out_" + tag #output file for transition matrix
         result = build_markov.markov(out_file)
 
-        result_file = data['build']['result_dir'] + "result_" + tag
+        result_file = data['build']['results_dir'] + sub_dir + "result_" + tag
         #print(result)
         with open(result_file, 'w') as out:
             json.dump(result, out) #save transition matrix
@@ -43,14 +50,25 @@ def main(parse):
 if __name__ == '__main__':
     
     parser = argparse.ArgumentParser()
-    parser.add_argument("--buildonly", help="only build the model, do not parse files", action="store_true")
+    parser.add_argument("--buildonly", action="store_true", help="only build the model, do not parse files")
+    parser.add_argument("mode", choices=['type', 'length'], help="choose parse mode")
+    parser.add_argument("--serveronly", action="store_true", help="only consider packets coming from server")
     args = parser.parse_args()
 
     parse_files = True
+    server_only = False
 
     if args.buildonly:
-        parse_files = False        
+        parse_files = False
+
+    if args.serveronly:
+        server_only = True
 
     print("BUILD - starting...")
-    main(parse_files)
+
+    print("server only: {}".format(server_only))
+    print(" mode: {}".format(args.mode))
+
+    main(parse_files, args.mode, server_only)
+    
     print("BUILD - done.")
