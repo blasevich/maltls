@@ -40,7 +40,11 @@ def main(parse, mode, server_only):
     for tag in data['build']['tags']: # for every malware build a Markov chain
         print("BUILD - creating Markov chain for {}".format(tag))
         out_file = data['build']['out_dir'] + sub_dir + "out_" + tag #output file for transition matrix
-        result = build_markov.markov(out_file)
+
+        MAX = data['build']['max_length']
+        MIN = data['build']['min_length']
+
+        result = build_markov.markov(out_file, MAX, MIN)
 
         result_file = data['build']['results_dir'] + sub_dir + "result_" + tag
         #print(result)

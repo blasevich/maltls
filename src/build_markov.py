@@ -18,27 +18,30 @@ def count_instances(List): #IN: a list; OUT: a dictionary. its keys are the list
     #print(d)
     return d
 
-def markov(file_in):
+def markov(file_in, max_length, min_length):
     lenghts = []
     M = [] #will contain all the type sequences
     states = [] #will contain all the TLS message types (i.e. states) seen in the flows
 
     ###################################################################
-    with open(file_in) as f:
+    with open(file_in, 'r') as f:
         row = 0 # cont the number of type sequences, or rows in the transition matrix
+
         for line in f.readlines():
             r = []
             if not line.startswith('stream') and not line.startswith('TAG') and not line.startswith('\n'): # get only the type sequences
                 record = line.split() #the type sequence
                 l = len(record)
-                lenghts.append(l)
-                for j in range(l):
-                    r.append(record[j])
-                    if record[j] not in states: #if a new state is found, add it to states
-                        states.append(record[j])
-                M.append(r)
-                #print(r)
-                row = row+1
+
+                if l<=max_length and l>=min_length: # if len sequence <min or >max => dont consider this flow
+                    lenghts.append(l)
+                    for j in range(l):
+                        r.append(record[j])
+                        if record[j] not in states: #if a new state is found, add it to states
+                            states.append(record[j])
+                    M.append(r)
+                    #print(r)
+                    row = row+1
     ###################################################################
 
     ALL = []

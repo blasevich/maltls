@@ -7,6 +7,9 @@ import argparse
 
 def main(parse, mode, server_only):
 
+    MAX = ['apply']['max_length']
+    MIN = ['apply']['min_length']
+
     if server_only:
         sub_dir = mode + "/dst/"
     else:
@@ -58,12 +61,14 @@ def main(parse, mode, server_only):
                             for s in fo.readlines():
                                 if not s.startswith('stream') and not s.startswith('TAG') and not s.startswith('\n'):
                                     x = s.split()
-                                    p = get_probability.prob(M[0], M[1], M[2], x)
-                                    print("{}: {}".format(x, p))
-                                    result.write("{} {}\n".format(x, p)) #write tls sequence + probability
+                                    l = len(x)
+                                    if l>=MIN and l<=MAX: # if len sequence <min or >max => dont consider this flow
+                                        p = get_probability.prob(M[0], M[1], M[2], x)
+                                        print("{}: {}".format(x, p))
+                                        result.write("{} {}\n".format(x, p)) #write tls sequence + probability
 
-                                    D[name][stream_number]["sequence"] = x
-                                    D[name][stream_number][tag] = p
+                                        D[name][stream_number]["sequence"] = x
+                                        D[name][stream_number][tag] = p
                                 elif s.startswith('stream'):
                                     print("{}".format(s), end=" ")
                                     result.write("{}".format(s))
