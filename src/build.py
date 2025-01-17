@@ -66,9 +66,9 @@ if __name__ == '__main__':
 
     print("BUILD - starting...")
 
-    print("server only: {}".format(server_only))
+    print(" server only: {}".format(server_only))
     print(" mode: {}".format(args.mode))
 
     main(parse_files, args.mode, server_only)
-    
+
     print("BUILD - done.")

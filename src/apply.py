@@ -97,7 +97,7 @@ if __name__ == '__main__':
 
     print("APPLY - starting...")
 
-    print("server only: {}".format(server_only))
+    print(" server only: {}".format(server_only))
     print(" mode: {}".format(args.mode))
 
     main(parse_files, args.mode, server_only)
