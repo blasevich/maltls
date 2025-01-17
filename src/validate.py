@@ -75,9 +75,9 @@ def main():
         R = json.load(f)
 
     results_file_all = data['validate']['results_file_all']
-    threshold = data['threshold']
-    MAX = data['max_length']
-    MIN = data['min_length']
+    threshold = data['validate']['threshold']
+    MAX = data['validate']['max_length']
+    MIN = data['validate']['min_length']
 
     sequences = 0 #double check number of sequences
 
