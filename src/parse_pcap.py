@@ -73,7 +73,7 @@ def parse_stream_length(filename_in, filename_out, tls_streams, params): #in: pc
             i += 1
         out.write("\n")
 
-def parse_file(filename_in, filename_out):
+def parse_file(filename_in, filename_out, mode):
     params = ["-o", "tcp.desegment_tcp_streams:TRUE",
         "-o", "tls.desegment_ssl_records:TRUE",
         "-o", "tls.desegment_ssl_application_data:TRUE"]
@@ -86,8 +86,13 @@ def parse_file(filename_in, filename_out):
     tls_streams = search_tls(filename_in, params, filter)
     flows = flows + len(tls_streams)
 
-    ###parse_stream(filename_in, filename_out, tls_streams, params) #tls content types
-    parse_stream_length(filename_in, filename_out, tls_streams, params) #packets lengths
+    if mode == "type":
+        parse_stream(filename_in, filename_out, tls_streams, params) #tls content types
+    elif mode == "length":
+        parse_stream_length(filename_in, filename_out, tls_streams, params) #packets lengths
+    else:
+        print("\tparse - invalid parse mode")
+        return -1
 
     return flows
 
