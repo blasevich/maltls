@@ -7,9 +7,6 @@ import argparse
 
 def main(parse, mode, server_only):
 
-    MAX = ['apply']['max_length']
-    MIN = ['apply']['min_length']
-
     if server_only:
         sub_dir = mode + "/dst/"
     else:
@@ -18,6 +15,9 @@ def main(parse, mode, server_only):
     config_file = "../maltls.toml"
     with open(config_file, "rb") as f:
         data = tomllib.load(f)
+
+    MAX = data['apply']['max_length']
+    MIN = data['apply']['min_length']
 
     D = {}
 
