@@ -9,6 +9,7 @@ def search_tls(filename_in, params, filter):
             try:
                 tls_streams.append(int(packet.tcp.stream))
             except AttributeError:
+                print("packet number: {}".format(packet.number))
                 print(traceback.format_exc())
     return tls_streams
 
@@ -39,7 +40,17 @@ def parse_stream(filename_in, filename_out, tls_streams, params): #in: pcap file
                                         out.write(",{}".format(field.show))
 
                                 out.write(",")
+                            except:
+                                pass
 
+                            try:
+                                opaque_type = record.record_opaque_type.show
+                                out.write(opaque_type)
+                                other_opaque_types = record.record_opaque_type.alternate_fields
+                                if other_opaque_types:
+                                    for field in other_opaque_types:
+                                        out.write(",{}".format(field.show))
+                                out.write(",")
                             except:
                                 pass
 
