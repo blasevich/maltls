@@ -21,39 +21,42 @@ def fun(tag, dict, file, out, threshold, max_length, min_length):
 
     for stream in dict:
         #print(stream)
-        length = len(dict[stream]['sequence'])
-        sequences += 1
+        if 'sequence' in dict[stream].keys():
+            length = len(dict[stream]['sequence'])
+            sequences += 1
 
-        if length>=min_length and length<=max_length: # if len sequence <min or >max => dont consider this flow
-            D[tag]['num_sequences'] += 1
-            actual_sequences += 1
-            #print(dict[stream]['sequence'])
-            dict[stream].pop('sequence')
+            if length>=min_length and length<=max_length: # if len sequence <min or >max => dont consider this flow
+                D[tag]['num_sequences'] += 1
+                actual_sequences += 1
+                #print(dict[stream]['sequence'])
+                dict[stream].pop('sequence')
 
-            print(dict[stream])
-            m = max(zip(dict[stream].values(), dict[stream].keys()))
-            print(m)
+                #print(dict[stream])
+                m = max(zip(dict[stream].values(), dict[stream].keys()))
+                #print(m)
 
-            if m[0] <= threshold:
-                #print("classified as: NONE.", end=" ")
-                out.write("{} {} {} {} ".format(file, stream, dict[stream], "NONE"))
-                if "NONE" in file:
-                    #print("OK")
-                    out.write("OK\n")
+                if m[0] <= threshold:
+                    #print("classified as: none.", end=" ")
+                    out.write("{} {} {} {} ".format(file, stream, dict[stream], "none"))
+                    if "none" in file:
+                        #print("OK")
+                        out.write("OK\n")
+                        D[tag]['true'] += 1
+                    else:
+                        #print("NOPE")
+                        D[tag]['false'] += 1
+                        out.write("NOPE\n")
                 else:
-                    #print("NOPE")
-                    out.write("NOPE\n")
-            else:
-                #print("classified as: {}.".format(m[1]), end=" ")
-                out.write("{} {} {} {} ".format(file, stream, dict[stream], m[1])) 
-                if m[1] in file:
-                    #print("OK")
-                    D[tag]['true'] += 1
-                    out.write("OK\n")
-                else:
-                    #print("NOPE")
-                    D[tag]['false'] += 1
-                    out.write("NOPE\n")
+                    #print("classified as: {}.".format(m[1]), end=" ")
+                    out.write("{} {} {} {} ".format(file, stream, dict[stream], m[1])) 
+                    if m[1] in file:
+                        #print("OK")
+                        D[tag]['true'] += 1
+                        out.write("OK\n")
+                    else:
+                        #print("NOPE")
+                        D[tag]['false'] += 1
+                        out.write("NOPE\n")
 
     return actual_sequences
 
