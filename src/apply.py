@@ -51,7 +51,7 @@ def main(parse, mode, server_only):
                 result.write("{}\n".format(name))
 
                 for tag in data['apply']["tags"]:
-                    if tag != "none": #test !
+                    if tag != "none":
                         result.write("{}\n".format(tag))
                         markov = data['build']['results_dir'] + sub_dir + "result_" + tag #retrieve transition matrix
                         with open(markov, 'r') as f:
@@ -64,13 +64,13 @@ def main(parse, mode, server_only):
                                     l = len(x)
                                     if l>=MIN and l<=MAX: # if len sequence <min or >max => dont consider this flow
                                         p = get_probability.prob(M[0], M[1], M[2], x)
-                                        print("{}: {}".format(x, p))
+                                        #print("{}: {}".format(x, p))
                                         result.write("{} {}\n".format(x, p)) #write tls sequence + probability
 
                                         D[name][stream_number]["sequence"] = x
                                         D[name][stream_number][tag] = p
                                 elif s.startswith('stream'):
-                                    print("{}".format(s), end=" ")
+                                    #print("{}".format(s), end=" ")
                                     result.write("{}".format(s))
 
                                     x = s.split(':')
