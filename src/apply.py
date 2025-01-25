@@ -16,8 +16,8 @@ def main(parse, mode, server_only):
     with open(config_file, "rb") as f:
         data = tomllib.load(f)
 
-    MAX = data['apply']['max_length']
-    MIN = data['apply']['min_length']
+    # MAX = data['apply']['max_length']
+    # MIN = data['apply']['min_length']
 
     D = {}
 
@@ -62,13 +62,13 @@ def main(parse, mode, server_only):
                                 if not s.startswith('stream') and not s.startswith('TAG') and not s.startswith('\n'):
                                     x = s.split()
                                     l = len(x)
-                                    if l>=MIN and l<=MAX: # if len sequence <min or >max => dont consider this flow
-                                        p = get_probability.prob(M[0], M[1], M[2], x)
-                                        #print("{}: {}".format(x, p))
-                                        result.write("{} {}\n".format(x, p)) #write tls sequence + probability
+                                    #if l>=MIN and l<=MAX: # if len sequence <min or >max => dont consider this flow
+                                    p = get_probability.prob(M[0], M[1], M[2], x)
+                                    #print("{}: {}".format(x, p))
+                                    result.write("{} {}\n".format(x, p)) #write tls sequence + probability
 
-                                        D[name][stream_number]["sequence"] = x
-                                        D[name][stream_number][tag] = p
+                                    D[name][stream_number]["sequence"] = x
+                                    D[name][stream_number][tag] = p
                                 elif s.startswith('stream'):
                                     #print("{}".format(s), end=" ")
                                     result.write("{}".format(s))
