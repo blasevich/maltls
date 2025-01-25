@@ -1,5 +1,6 @@
 import tomllib
 import json
+import argparse
 
 D = {}
 
@@ -60,7 +61,7 @@ def fun(tag, dict, file, out, threshold, max_length, min_length):
 
     return actual_sequences
 
-def main():
+def main(mode, server_only):
     config_file = "../maltls.toml"
     with open(config_file, "rb") as f:
         data = tomllib.load(f)
@@ -73,11 +74,18 @@ def main():
         D[tag]['num_sequences'] = 0
     
     #retrieve apply results
-    apply_results = data['apply']['results_file']
+    # apply_results = data['apply']['results_file']
+    if server_only:
+        apply_results = data['apply']['results_dir'] + mode + "/dst/" + "out"
+        sub_dir = mode + "/dst/"
+    else:
+        apply_results = data['apply']['results_dir'] + mode + "/src_dst/" + "out"
+        sub_dir = mode + "/src_dst/"
+
     with open(apply_results, 'r') as f:
         R = json.load(f)
 
-    results_file_all = data['validate']['results_file_all']
+    results_file_all = data['validate']['results_dir'] + sub_dir + "validate_out_all"
     threshold = data['validate']['threshold']
     MAX = data['validate']['max_length']
     MIN = data['validate']['min_length']
@@ -86,16 +94,29 @@ def main():
 
     with open(results_file_all, 'w') as out:
         for file in R:
-            print(file)
+            #print("{}".format(file), end=" ")
             sequences = sequences + fun(find_tag(file, tags), R[file], file, out, threshold, MAX, MIN)
 
-    print(D)
-    print("\nnumber of sequences: {}".format(sequences))
+    print(" result: {}".format(D))
+    print(" number of sequences: {}".format(sequences))
 
-    results_file_dict = data['validate']['results_file_dict']
+    results_file_dict = data['validate']['results_dir'] + sub_dir + "validate_out_dict"
     with open(results_file_dict, 'w') as out:
         json.dump(D, out)
             
 
 if __name__ == '__main__':
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--serveronly", action="store_true", help="only consider packets coming from server")
+    parser.add_argument("mode", choices=['type', 'length'], help="choose parse mode")
+    args = parser.parse_args()
+
+    server_only = False
+    if args.serveronly:
+        server_only = True
+
+    print("VALIDATE - starting...")
+    print(" server only: {}".format(server_only))
+    print(" mode: {}".format(args.mode))
+    main(args.mode, server_only)
+    print("VALIDATE - done")
