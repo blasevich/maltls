@@ -5,7 +5,7 @@ import glob
 import json
 import argparse
 
-def main(parse, mode, server_only):
+def main(parse, mode, server_only, *args):
 
     if server_only:
         sub_dir = mode + "/dst/"
@@ -41,8 +41,12 @@ def main(parse, mode, server_only):
         print("BUILD - creating Markov chain for {}".format(tag))
         out_file = data['build']['out_dir'] + sub_dir + "out_" + tag #output file for transition matrix
 
-        MAX = data['build']['max_length']
-        MIN = data['build']['min_length']
+        if args:
+            MAX = args[0]
+            MIN = args[0]
+        else:
+            MAX = data['build']['max_length']
+            MIN = data['build']['min_length']
 
         result = build_markov.markov(out_file, MAX, MIN)
 
@@ -57,6 +61,7 @@ if __name__ == '__main__':
     parser.add_argument("--buildonly", action="store_true", help="only build the model, do not parse files")
     parser.add_argument("mode", choices=['type', 'length'], help="choose parse mode")
     parser.add_argument("--serveronly", action="store_true", help="only consider packets coming from server")
+    parser.add_argument('-l','--length', type=int, help="")
     args = parser.parse_args()
 
     parse_files = True
@@ -73,6 +78,10 @@ if __name__ == '__main__':
     print(" server only: {}".format(server_only))
     print(" mode: {}".format(args.mode))
 
-    main(parse_files, args.mode, server_only)
+    if args.length:
+        print(" length: {}".format(args.length))
+        main(parse_files, args.mode, server_only, args.length)
+    else:
+        main(parse_files, args.mode, server_only)
 
     print("BUILD - done.")
