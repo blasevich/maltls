@@ -61,7 +61,7 @@ if __name__ == '__main__':
     parser.add_argument("--buildonly", action="store_true", help="only build the model, do not parse files")
     parser.add_argument("mode", choices=['type', 'length'], help="choose parse mode")
     parser.add_argument("--serveronly", action="store_true", help="only consider packets coming from server")
-    parser.add_argument('-l','--length', type=int, help="")
+    parser.add_argument('-l','--length', type=int, help="flow length")
     args = parser.parse_args()
 
     parse_files = True

@@ -12,9 +12,9 @@ out_dir = "../out/build/parsed_pcap/"
 results_dir = "../out/build/results/"
 
 [apply]
-# min_length = 1 #min flow length
-# max_length = 1400 #max flow length
-tags = ["cobalt", "dridex", "emotet", "trickbot", "none"]
+min_length = 1 #min flow length
+max_length = 1400 #max flow length
+tags = ["dridex", "emotet", "trickbot", "none", "cobalt"]
 cobalt = "cobalt/validate/"
 dridex = "dridex/validate/"
 emotet = "emotet/validate/"

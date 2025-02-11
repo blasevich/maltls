@@ -42,6 +42,7 @@ def markov(file_in, max_length, min_length):
                     M.append(r)
                     #print(r)
                     row = row+1
+    #print(" number of sequences: {}".format(row))
     ###################################################################
 
     ALL = []

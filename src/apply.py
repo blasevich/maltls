@@ -5,7 +5,7 @@ import glob
 import json
 import argparse
 
-def main(parse, mode, server_only):
+def main(parse, mode, server_only, *args):
 
     if server_only:
         sub_dir = mode + "/dst/"
@@ -16,8 +16,12 @@ def main(parse, mode, server_only):
     with open(config_file, "rb") as f:
         data = tomllib.load(f)
 
-    # MAX = data['apply']['max_length']
-    # MIN = data['apply']['min_length']
+    if args:
+        MAX = args[0]
+        MIN = args[0]
+    else:
+        MAX = data['apply']['max_length']
+        MIN = data['apply']['min_length']
 
     D = {}
 
@@ -42,7 +46,8 @@ def main(parse, mode, server_only):
             if parse:
                 with open(file_out, 'w') as out:
                     out.write("TAG: {}\n".format(name))
-                parse_pcap.parse_file(f, file_out, mode)
+                flows = parse_pcap.parse_file(f, file_out, mode)
+                #print("number of flows: {}".format(flows))
 
             D[name] = {}
 
@@ -62,13 +67,13 @@ def main(parse, mode, server_only):
                                 if not s.startswith('stream') and not s.startswith('TAG') and not s.startswith('\n'):
                                     x = s.split()
                                     l = len(x)
-                                    #if l>=MIN and l<=MAX: # if len sequence <min or >max => dont consider this flow
-                                    p = get_probability.prob(M[0], M[1], M[2], x)
-                                    #print("{}: {}".format(x, p))
-                                    result.write("{} {}\n".format(x, p)) #write tls sequence + probability
+                                    if l<= MAX and l>=MIN:
+                                        p = get_probability.prob(M[0], M[1], M[2], x)
+                                        #print("{}: {}".format(x, p))
+                                        result.write("{} {}\n".format(x, p)) #write tls sequence + probability
 
-                                    D[name][stream_number]["sequence"] = x
-                                    D[name][stream_number][tag] = p
+                                        D[name][stream_number]["sequence"] = x
+                                        D[name][stream_number][tag] = p
                                 elif s.startswith('stream'):
                                     #print("{}".format(s), end=" ")
                                     result.write("{}".format(s))
@@ -89,6 +94,7 @@ if __name__ == '__main__':
     parser.add_argument("--applyonly", action="store_true", help="only apply the model, do not parse files")
     parser.add_argument("mode", choices=['type', 'length'], help="choose parse mode")
     parser.add_argument("--serveronly", action="store_true", help="only consider packets coming from server")
+    parser.add_argument('-l','--length', type=int, help="flow length")
     args = parser.parse_args()
 
     parse_files = True
@@ -105,6 +111,10 @@ if __name__ == '__main__':
     print(" server only: {}".format(server_only))
     print(" mode: {}".format(args.mode))
 
-    main(parse_files, args.mode, server_only)
+    if args.length:
+        print(" length: {}".format(args.length))
+        main(parse_files, args.mode, server_only, args.length)
+    else:
+        main(parse_files, args.mode, server_only)
 
     print("APPLY - done.")
