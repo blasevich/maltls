@@ -61,7 +61,7 @@ def fun(tag, dict, file, out, threshold, max_length, min_length):
 
     return actual_sequences
 
-def main(mode, server_only):
+def main(mode, server_only, *args):
     config_file = "../maltls.toml"
     with open(config_file, "rb") as f:
         data = tomllib.load(f)
@@ -87,8 +87,13 @@ def main(mode, server_only):
 
     results_file_all = data['validate']['results_dir'] + sub_dir + "validate_out_all"
     threshold = data['validate']['threshold']
-    MAX = data['validate']['max_length']
-    MIN = data['validate']['min_length']
+
+    if args:
+        MAX = args[0]
+        MIN = args[0]
+    else:
+        MAX = data['validate']['max_length']
+        MIN = data['validate']['min_length']
 
     sequences = 0 #double check number of sequences
 
@@ -100,6 +105,22 @@ def main(mode, server_only):
     print(" result: {}".format(D))
     print(" number of sequences: {}".format(sequences))
 
+    #(micro F1 score) %(TP/(TP+1/2(FP+FN))), FP==FN==F => (TP/(TP+F))
+    recall_mean = 0
+    all_true = 0
+    all_false = 0
+    for tag in tags:
+        recall = D[tag]['true']/(D[tag]['true'] + D[tag]['false'])
+        recall_mean = recall_mean + recall
+
+        all_true = all_true + D[tag]['true']
+        all_false = all_false + D[tag]['false']
+
+    micro_f1 = all_true/(all_true + all_false)
+    recall_mean = recall_mean/5
+
+    print("recall mean: {}, micro F1 score: {}".format(recall_mean, micro_f1))
+
     results_file_dict = data['validate']['results_dir'] + sub_dir + "validate_out_dict"
     with open(results_file_dict, 'w') as out:
         json.dump(D, out)
@@ -109,6 +130,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--serveronly", action="store_true", help="only consider packets coming from server")
     parser.add_argument("mode", choices=['type', 'length'], help="choose parse mode")
+    parser.add_argument('-l','--length', type=int, help="flow length")
     args = parser.parse_args()
 
     server_only = False
@@ -118,5 +140,11 @@ if __name__ == '__main__':
     print("VALIDATE - starting...")
     print(" server only: {}".format(server_only))
     print(" mode: {}".format(args.mode))
-    main(args.mode, server_only)
+    
+    if args.length:
+        print(" length: {}".format(args.length))
+        main(args.mode, server_only, args.length)
+    else:
+        main(args.mode, server_only)
+    
     print("VALIDATE - done")

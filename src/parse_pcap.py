@@ -6,11 +6,12 @@ def search_tls(filename_in, params, filter):
     tls_streams = []
     with pyshark.FileCapture(filename_in, custom_parameters=params, keep_packets=False, debug=False, display_filter=filter) as capture:
         for packet in capture:
-            try:
-                tls_streams.append(int(packet.tcp.stream))
-            except AttributeError:
-                print("packet number: {}".format(packet.number))
-                print(traceback.format_exc())
+            if 'TLS' in packet:
+                try:
+                    tls_streams.append(int(packet.tcp.stream))
+                except AttributeError:
+                    print("packet number: {}".format(packet.number))
+                    print(traceback.format_exc())
     return tls_streams
 
 def parse_stream(filename_in, filename_out, tls_streams, params): #in: pcap files, out: lists of tls types
@@ -41,6 +42,7 @@ def parse_stream(filename_in, filename_out, tls_streams, params): #in: pcap file
 
                                 out.write(",")
                             except:
+                                #print("attribute error: {}".format(packet.number))
                                 pass
 
                             try:
@@ -62,26 +64,64 @@ def parse_stream_length(filename_in, filename_out, tls_streams, params): #in: pc
     print("\tparse - parsing file {}".format(filename_in))
     with open(filename_out, "a") as out:
         out.write("TAG: {}".format(filename_in))
-        i = 0
+        #i = 0
         for stream_number in tls_streams:
             out.write("\nstream number: {}\n".format(stream_number))
             with pyshark.FileCapture(filename_in, custom_parameters=params, keep_packets=False, debug=False, display_filter="tcp.stream eq %d and tls" % stream_number) as capture:
                 for packet in capture:
                     if 'TLS' in packet:
                         try:
-                            len = int(packet.length) #get packet length
-                            l = len // 150 #map packet length to a state (buckets of length 150)
+                            ########################################
+                            r_len = packet.tls.record_length
+                            # l = int(r_len)
 
-                            if ipaddress.ip_address(packet.ip.src).is_private: #if packet.ip.src is private IP
-                                l = l * -1
-
+                            l = int(packet.length)
+                            l = l // 150
+                            l = l + 1
+                            try:
+                                if ipaddress.ip_address(packet.ip.src).is_private: #if packet.ip.src is private IP
+                                    l = l * -1
+                            except:#ipv6 case
+                                # if packet.ipv6.src == :
+                                #     l = l * -1
+                                print("{} - ipv6 address - not supported for length mode".format(packet.number))
                             out.write("{} ".format(l))
-                            #print(l)
+                            ########################################
+                            # len = []
+
+                            # #r_len = packet.tls.record_length
+                            # #lunghezza blocco tls
+                            # for record in packet.get_multiple_layers("TLS"):#for all TLS records in packet
+                            #     len.append(int(record.record_length))
+
+                            # fields = packet.tls._get_all_fields_with_alternates()
+
+                            # try:
+                            #     for field in fields:
+                            #         for f in field.alternate_fields:
+                            #             if f.name == "tls.record.length":
+                            #                 len.append(int(f.show))
+                            # except:
+                            #     pass
+
+                            # #l = sum(len) // 150 #map packet length to a state (buckets of length 150)
+                            # for l in len:
+                            #     l = l // 150
+                            #     l = l + 1 #fix bug: state 0
+                            #     try:
+                            #         if ipaddress.ip_address(packet.ip.src).is_private: #if packet.ip.src is private IP
+                            #             l = l * -1
+                            #     except:#ipv6 case
+                            #         if packet.ipv6.src == :
+                            #             l = l * -1
+                            #         #print("{} - ipv6 address - not supported for length mode".format(packet.number))
+                            #     out.write("{},".format(l))
 
                         except AttributeError:
-                            #print("attribute error: {}".format(packet.number))
                             pass
-            i += 1
+
+                        #out.write(" ")
+
         out.write("\n")
 
 def parse_file(filename_in, filename_out, mode):

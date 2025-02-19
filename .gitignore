@@ -1,4 +1,3 @@
 src/__pycache__
-pcap/src_dst/none
-pcap/src_dst/cobalt
-pcap/dst
+pcap/
+out/
